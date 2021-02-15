@@ -20,21 +20,23 @@ instruction:
 -march=knl
 ```
 
-Below is the compiler line I used:
+Below is the compiler line that was used:
 
 ```
 g++ simd_mul.cpp -g -Wpsabi -march=knl -o test.out
 ```
 
 There is code to perform the 100000x100000 matrix operations, but
-it took too long and required too much memory for me to run it
-on my computer.
+it took too long and required too much memory to run it
+on the hardware availiable.
 
 ## Code Structure
 
-In the main function I create a loop that three times to test
+In the main function, the code is lopped over three times to test
 non optimized and SIMD optimized code with 1000x1000, 10000x10000,
 and 100000x100000 sized matrices to get performance information.
+Currently, the 100000x100000 loop is skipped because it requires
+too many resources to run.
 
 The non-optimized matrix multiplication is done by looping over 
 the rows and columns to get the correct output. It has a runtime
@@ -51,8 +53,8 @@ __m256 a_line = _mm256_loadu_ps(&a[i][k]);
 __m256 b_line = _mm256_loadu_ps(&b[j][k]);
 ```
 
-With the appropriate data loaded in I can then multiply and add the
-values to the running total:
+With the appropriate data loaded in then the values can be multiplied and
+added to the running total:
 
 ```c++
 result = _mm256_add_ps(result, _mm256_mul_ps(a_line, b_line));
@@ -84,11 +86,11 @@ add and multiply by the fixed positions, as seen below:
 ---------------------------------
 ```
 
-So if becomes more obvious that I am performing the same operations
-on 8 values at a time, which is a significant speed up. But I need
-to somehow sum up all of the values that are added up. I could do that 
-by simply adding them all up in a running total, but instead I do it
-with SIMD instruction listed below:
+So it becomes more obvious that the same operations are being performed
+on 8 values at a time, which is a significant speed up. The values in
+the row need to somehow be sum up. That could be done by simply adding them 
+all up in a running total, but instead the code used SIMD instruction 
+listed below:
 
 ```c++
 result = _mm256_hadd_ps(result, result);
@@ -122,11 +124,12 @@ Below is a visualization of how the `_mm256_hadd_ps` function works:
               -------------------------------------------------
 ```
 
-I also include some debugging code at the end of the function. 
+There is also some debugging code at the end of the function. 
 
 ## Output Results
 
-Below is the output when it is run. I ran it twice an included both outputs:
+Below is the output when it is run. Two outputs are included to
+show consistency:
 
 ```
 RUN 1
@@ -146,7 +149,7 @@ Matrix size: 10000x10000
 SIMD Implementation Runtime: 12252.504719sec
 ```
 
-I then run a comparison test once between non-optimized matrix
+The comparison test was ran once between non-optimized matrix
 multiplication code and SIMD-optimized matrix multiplication code,
 the results are below:
 
@@ -157,5 +160,8 @@ Matrix size: 1000x1000
 Standard Implementation Runtime: 95.572037000sec
 SIMD Implementation Runtime: 12.275941000sec
 ```
+
+The 1000x1000 matrix was the only one used to compare because 
+it would take too long to run the non-optimized code for 10000x10000.
 
 ## Analysis
