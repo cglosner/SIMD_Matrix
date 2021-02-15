@@ -1,6 +1,35 @@
 # SIMD_Matrix
 SIMD Matrix to Matrix Multiplication
 
+## Overview and Prelimiaries
+
+The SIMD code is designed for AVX and uses single point precision
+floating point data values. The code runs both non-optimized
+standard c++ code and SIMD-optimized code. The code is designed
+to operate on any square matrix and perform matrix to matrix
+multiplication. The assumtion is that both inputs are square
+matrices of the same dimensions.
+
+Note, in order to properly compile the program one of the 
+following three commands need to be included in the compiler
+instruction:
+
+```
+-march=sandybridge
+-march=haswell
+-march=knl
+```
+
+Below is the compiler line I used:
+
+```
+g++ simd_mul.cpp -g -Wpsabi -march=knl -o test.out
+```
+
+There is code to perform the 100000x100000 matrix operations, but
+it took too long and required too much memory for me to run it
+on my computer.
+
 ## Code Structure
 
 In the main function I create a loop that three times to test
@@ -93,8 +122,11 @@ Below is a visualization of how the `_mm256_hadd_ps` function works:
               -------------------------------------------------
 ```
 
-I also include some debugging code at the end of the function. Below is the output
-when it is run. I ran it twice an included both outputs:
+I also include some debugging code at the end of the function. 
+
+## Output Results
+
+Below is the output when it is run. I ran it twice an included both outputs:
 
 ```
 RUN 1
@@ -126,3 +158,4 @@ Standard Implementation Runtime: 95.572037000sec
 SIMD Implementation Runtime: 12.275941000sec
 ```
 
+## Analysis
