@@ -165,3 +165,12 @@ The 1000x1000 matrix was the only one used to compare because
 it would take too long to run the non-optimized code for 10000x10000.
 
 ## Analysis
+
+Below is a comparison plot between the non-optimized matrix multiplication
+and the SIMD-optimized matrix multiplication. The x-axis represents the 
+matrix size, which goes from a 4x4 matrix to a 499x499 matrix. 
+
+![plot](https://github.com/cglosner/SIMD_Matrix/blob/main/StandardVsSIMD.png)
+
+Analyzing the plot, one can start to see a significant speed up in performance
+when using SIMD-optimization compared to the non-optimized or standard version.
