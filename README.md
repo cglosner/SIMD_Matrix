@@ -32,7 +32,7 @@ on the hardware availiable.
 
 ## Code Structure
 
-In the main function, the code is lopped over three times to test
+In the main function, the code is looped over three times to test
 non optimized and SIMD optimized code with 1000x1000, 10000x10000,
 and 100000x100000 sized matrices to get performance information.
 Currently, the 100000x100000 loop is skipped because it requires
@@ -40,7 +40,7 @@ too many resources to run.
 
 The non-optimized matrix multiplication is done by looping over 
 the rows and columns to get the correct output. It has a runtime
-of O(n^3) where n is the size of the matrix.
+of O(n^3), where n is the size of the matrix.
 
 The SIMD optimized code performs a transpose of the second matrix,
 and then runs a SIMD optimized function which loops over the code 
@@ -86,10 +86,10 @@ add and multiply by the fixed positions, as seen below:
 ---------------------------------
 ```
 
-So it becomes more obvious that the same operations are being performed
-on 8 values at a time, which is a significant speed up. The values in
-the row need to somehow be sum up. That could be done by simply adding them 
-all up in a running total, but instead the code used SIMD instruction 
+Thus, it becomes more obvious that the same operations are being performed
+on 8 values at a time, which shows a significant increase in speed. The values in
+the row need to somehow be summed up. This can be done by simply adding them 
+all up in a running total, but instead the code used the SIMD instruction 
 listed below:
 
 ```c++
@@ -100,8 +100,8 @@ result = _mm256_hadd_ps(result, result);
 ```
 
 The `_mm256_hadd_ps` instuction adds up values that are next to each other
-horizontially and the `result[1] = result[4];` instruction just moves the
-low 4 values total to front to be added with the high 4 values total.
+horizontially and the `result[1] = result[4];` instruction simply moves the
+low 4 values total to the front to be added with the high 4 values total.
 Below is a visualization of how the `_mm256_hadd_ps` function works:
 
 ```
@@ -149,7 +149,7 @@ Matrix size: 10000x10000
 SIMD Implementation Runtime: 12252.504719sec
 ```
 
-The comparison test was ran once between non-optimized matrix
+The comparison test was run once between non-optimized matrix
 multiplication code and SIMD-optimized matrix multiplication code,
 the results are below:
 
